@@ -1,11 +1,14 @@
 
 import itertools
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import confusion_matrix, classification_report, roc_curve, auc, roc_auc_score
+from sklearn.metrics import precision_recall_fscore_support
+from sklearn.preprocessing import LabelBinarizer
 import os
 
-def explore_directory(directory_path: str):
+def explore_directory(directory_path):
     """
     Explores the directory and returns a list of all the files in the directory.
 
@@ -16,7 +19,7 @@ def explore_directory(directory_path: str):
     for dirpath, dirnames, filenames in os.walk(directory_path):
         print(f"Found {len(dirnames)} directories and {len(filenames)} images in '{dirpath}'.")
 
-def plot_acc_loss_curves(history: dict):
+def plot_acc_loss_curves(history):
     """
     Returns separate loss and accuracy curves from the history object for the training and validation sets.
 
@@ -52,18 +55,61 @@ def plot_acc_loss_curves(history: dict):
     plt.xlabel('Epochs')
     plt.show()
     
-def show_classification_report(model, images, labels):
+def show_confusion_matrix(y_true, y_pred):
     """
-    Generates a classification report for the model.
+    Generates a confusion matrix for the model.
 
     Args:
-        model (keras.models.Model): model to be evaluated.
-        images (list): list of images to be classified.
-        labels (list): list of labels.
+        y_true (list): list of true labels.
+        y_pred (list): list of predicted labels.
     """
     
-    y_true = images.classes
-    y_pred = np.argmax(model.predict(images), axis=1)
-    print(classification_report(y_true, y_pred, target_names=labels))
+    cf_matrix = confusion_matrix(y_true, y_pred)
+    sns.heatmap(cf_matrix, annot=True, cmap="YlGnBu")
+    plt.show()
+    
+def multiclass_roc_auc_score(y_true, y_pred, labels, average='macro'):
+    """
+    Generates a ROC curve for the model.
+
+    Args:
+        y_true (list): list of true labels.
+        y_pred (list): list of predicted labels.
+        labels (list): list of labels.
+        average (str, optional): average method for the ROC curve. Defaults to 'macro'.
+
+    Returns:
+        float: ROC AUC score.
+    """
+    lb = LabelBinarizer()
+    lb.fit(y_true)
+    y_true = lb.transform(y_true)
+    y_pred = lb.transform(y_pred)
+    
+    fig, ax = plt.subplots(figsize=(10, 10))
+    for i, label in enumerate(labels):
+        fpr, tpr, _ = roc_curve(y_true[:, i], y_pred[:, i])
+        ax.plot(fpr, tpr, label= '%s (AUC: %0.2f)' % (label, auc(fpr, tpr)))
+    ax.plot(fpr, tpr, 'b-', label='Random Guessing')
+    ax.legend()
+    ax.set_xlabel('False Positive Rate')
+    ax.set_ylabel('True Positive Rate')
+    
+    return roc_auc_score(y_true, y_pred, average=average)
+
+def view_random_image(target_dir, target_cls):
+    """
+    View a random image from the target directory.
+    
+    Args:
+        target_dir (str): target directory.
+        target_cls (str): target class.
+    """
+    target_folder = os.path.join(target_dir, target_cls)
+    random_image = np.random.choice(os.listdir(target_folder))
+    image = plt.imread(os.path.join(target_folder, random_image))
+    plt.imshow(image)
+    plt.title(f"{target_cls}\n({random_image.shape})")
+    plt.axis('off')
     
     
