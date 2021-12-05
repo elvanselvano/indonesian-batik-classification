@@ -209,8 +209,10 @@ def create_model(model_url, image_shape=(224,224), num_classes=10):
     return model
     
 def predict_multiclass(model, data):
-    """Predicts classes of data given and get the class with
-        the biggest probability
+    """
+    Predicts classes of data given and get the class with
+    the biggest probability
+    
     Args:
         `model` (keras.Model, keras.Sequential): multiclass classifier model.
         `data` (ImageDataGenerator, tf.Dataset): data to be predicted.
@@ -225,18 +227,11 @@ def predict_multiclass(model, data):
 
 def show_classification_report(y_true, y_pred, classes=None):
     """
-    Makes a labelled confusion matrix comparing predictions and ground truth labels.
-
-    If classes is passed, confusion matrix will be labelled, if not, integer class values
-    will be used.
+    calculate classification report and label each classes.
 
     Args:
         `y_true` (list): list of true labels.
         `y_pred` (list): list of predicted labels.
         `classes` (list, optional): list of classes. Defaults to None.
-    
-    
-    Returns:
-        None
     """  
     print(classification_report(y_true, y_pred, target_names=classes))
