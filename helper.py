@@ -223,7 +223,7 @@ def predict_multiclass(model, data):
 
 
 
-def predict_multiclass(y_true, y_pred, classes=None):
+def show_classification_report(y_true, y_pred, classes=None):
     """
     Makes a labelled confusion matrix comparing predictions and ground truth labels.
 
