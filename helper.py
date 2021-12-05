@@ -1,4 +1,3 @@
-
 import itertools
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -10,13 +9,23 @@ from sklearn.metrics import confusion_matrix, classification_report, roc_curve, 
 from sklearn.preprocessing import LabelBinarizer
 import os
 
+def set_seeds(seed):
+    """
+    Sets the seeds for the following: PYTHONHASHSEED, NumPy, and TensorFlow.
+
+    Args:
+        `seed` (int): seed value.
+    """
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    tf.random.set_seed(seed)
+
 def explore_directory(directory_path):
     """
     Explores the directory and returns a list of all the files in the directory.
 
     Args:
-        directory_path (str): target directory
-
+        `directory_path` (str): target directory
     """
     for dirpath, dirnames, filenames in os.walk(directory_path):
         print(f"Found {len(dirnames)} directories and {len(filenames)} images in '{dirpath}'.")
@@ -26,7 +35,7 @@ def plot_acc_loss_curves(history):
     Returns separate loss and accuracy curves from the history object for the training and validation sets.
 
     Args:
-        history (keras.callbacks.History): history object returned by the fit method of the model.
+        `history` (keras.callbacks.History): history object returned by the fit method of the model.
     """
     
     acc = history.history['accuracy']
@@ -62,8 +71,8 @@ def show_confusion_matrix(y_true, y_pred):
     Generates a confusion matrix for the model.
 
     Args:
-        y_true (list): list of true labels.
-        y_pred (list): list of predicted labels.
+        `y_true` (list): list of true labels.
+        `y_pred` (list): list of predicted labels.
     """
     
     cf_matrix = confusion_matrix(y_true, y_pred)
@@ -75,10 +84,10 @@ def multiclass_roc_auc_score(y_true, y_pred, labels, average='macro'):
     Generates a ROC curve for the model.
 
     Args:
-        y_true (list): list of true labels.
-        y_pred (list): list of predicted labels.
-        labels (list): list of labels.
-        average (str, optional): average method for the ROC curve. Defaults to 'macro'.
+        `y_true` (list): list of true labels.
+        `y_pred` (list): list of predicted labels.
+        `labels` (list): list of labels.
+        `average` (str, optional): average method for the ROC curve. Defaults to 'macro'.
 
     Returns:
         float: ROC AUC score.
@@ -104,8 +113,8 @@ def view_random_image(target_dir, target_cls):
     View a random image from the target directory.
     
     Args:
-        target_dir (str): target directory.
-        target_cls (str): target class.
+        `target_dir` (str): target directory.
+        `target_cls` (str): target class.
     """
     target_folder = os.path.join(target_dir, target_cls)
     random_image = np.random.choice(os.listdir(target_folder))
@@ -113,7 +122,6 @@ def view_random_image(target_dir, target_cls):
     plt.imshow(image)
     plt.title(f"{target_cls}\n({random_image.shape})")
     plt.axis('off')
-    
 
 def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_size=15): 
     """
@@ -123,11 +131,11 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_s
     will be used.
 
     Args:
-        y_true (list): list of true labels.
-        y_pred (list): list of predicted labels.
-        classes (list, optional): list of classes. Defaults to None.
-        figsize (tuple, optional): figure size. Defaults to (10, 10).
-        text_size (int, optional): text size. Defaults to 15.
+        `y_true` (list): list of true labels.
+        `y_pred` (list): list of predicted labels.
+        `classes` (list, optional): list of classes. Defaults to None.
+        `figsize` (tuple, optional): figure size. Defaults to (10, 10).
+        `text_size` (int, optional): text size. Defaults to 15.
         
     Returns:
         matplotlib.pyplot.figure: figure object.
@@ -178,9 +186,9 @@ def create_model(model_url, image_shape=(224,224), num_classes=10):
     """Takes a TensorFlow Hub URL and creates a Keras Sequential model with it.
     
     Args:
-        model_url (str): TensorFlow Hub feature extraction URL.
-        image_shape (tuple, optional): image shape. Defaults to (224,224).
-        num_classes (int, optional): number of classes. Defaults to 10.
+        `model_url` (str): TensorFlow Hub feature extraction URL.
+        `image_shape` (tuple, optional): image shape. Defaults to (224,224).
+        `num_classes` (int, optional): number of classes. Defaults to 10.
     
     Returns:
         keras.models.Sequential: Keras Sequential model with model_url as feature
