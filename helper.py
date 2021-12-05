@@ -209,4 +209,14 @@ def create_model(model_url, image_shape=(224,224), num_classes=10):
     return model
     
 def predict_multiclass(model, data):
+    """Predicts classes of data given and get the class with
+        the biggest probability
+    Args:
+        `model` (keras.Model, keras.Sequential): multiclass classifier model.
+        `data` (ImageDataGenerator, tf.Dataset): data to be predicted.
+    
+    Returns:
+        ndarray of ints: the result of model prediction with the
+        biggest probability for each data row
+    """
     return np.argmax(model.predict(data), axis=1)
