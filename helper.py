@@ -208,3 +208,5 @@ def create_model(model_url, image_shape=(224,224), num_classes=10):
 
     return model
     
+def predict_multiclass(model, data):
+    return np.argmax(model.predict(data), axis=1)
