@@ -220,3 +220,23 @@ def predict_multiclass(model, data):
         biggest probability for each data row
     """
     return np.argmax(model.predict(data), axis=1)
+
+
+
+def predict_multiclass(y_true, y_pred, classes=None):
+    """
+    Makes a labelled confusion matrix comparing predictions and ground truth labels.
+
+    If classes is passed, confusion matrix will be labelled, if not, integer class values
+    will be used.
+
+    Args:
+        `y_true` (list): list of true labels.
+        `y_pred` (list): list of predicted labels.
+        `classes` (list, optional): list of classes. Defaults to None.
+    
+    
+    Returns:
+        None
+    """  
+    print(classification_report(y_true, y_pred, target_names=classes))
