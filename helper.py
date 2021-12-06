@@ -208,3 +208,30 @@ def create_model(model_url, image_shape=(224,224), num_classes=10):
 
     return model
     
+def predict_multiclass(model, data):
+    """
+    Predicts classes of data given and get the class with
+    the biggest probability
+    
+    Args:
+        `model` (keras.Model, keras.Sequential): multiclass classifier model.
+        `data` (ImageDataGenerator, tf.Dataset): data to be predicted.
+    
+    Returns:
+        ndarray of ints: the result of model prediction with the
+        biggest probability for each data row
+    """
+    return np.argmax(model.predict(data), axis=1)
+
+
+
+def show_classification_report(y_true, y_pred, classes=None):
+    """
+    calculate classification report and label each classes.
+
+    Args:
+        `y_true` (list): list of true labels.
+        `y_pred` (list): list of predicted labels.
+        `classes` (list, optional): list of classes. Defaults to None.
+    """  
+    print(classification_report(y_true, y_pred, target_names=classes))
